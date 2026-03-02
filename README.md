@@ -1,246 +1,308 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NEONHIVE - Control Panel (clone)</title>
-  <style>
-    :root{
-      --bg:#0c0c0c;
-      --panel:#0f0f0f;
-      --accent:#8a2be2; /* purple */
-      --muted:#3a3a3a;
-      --card:#222;
-      --green:#00ff91;
-      --text:#dcdcdc;
-      --mono: "Lucida Console", Monaco, monospace;
-    }
-    html,body{height:100%;margin:0;background:var(--bg);font-family:Arial, Helvetica, sans-serif;color:var(--text);}
-    .app{
-      display:flex;
-      min-height:100vh;
-      align-items:stretch;
-    }
+    <meta charset="UTF-8">
+    <title>Dice Box RPG</title>
+    <style>
+        :root {
+            --gold: #ffcc00;
+            --bg: #1a1a1a;
+            --panel: #2a2a2a;
+            --red: #e74c3c;
+        }
 
-    /* left sidebar */
-    .sidebar{
-      width:210px;
-      background:#0a0a0a;
-      border-right:1px solid rgba(255,255,255,0.02);
-      padding:20px 12px;
-      box-sizing:border-box;
-    }
-    .brand{
-      color:var(--accent);
-      font-weight:800;
-      font-size:22px;
-      letter-spacing:2px;
-      margin-bottom:10px;
-      text-align:left;
-    }
-    .subbrand{font-size:10px;color:#6b6b6b;margin-bottom:18px;}
-    .nav{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .nav button{
-      background:transparent;
-      border:0;
-      text-align:left;
-      padding:12px 14px;
-      color:#d9d9d9;
-      cursor:pointer;
-      border-radius:4px;
-      font-size:15px;
-      width:100%;
-      transition:all .12s ease;
-      box-shadow:inset 0 0 0 1px rgba(0,0,0,0);
-    }
-    .nav button:hover{background:rgba(255,255,255,0.02); transform:translateX(3px);}
-    .nav button.active{
-      background: linear-gradient(90deg, rgba(138,43,226,0.12), rgba(138,43,226,0.02));
-      box-shadow:0 0 0 1px rgba(138,43,226,0.08) inset;
-      color: #fff;
-    }
+        body {
+            background: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
 
-    /* main content */
-    .main{
-      flex:1;
-      padding:30px 40px;
-    }
-    .title{
-      color:var(--accent);
-      font-weight:800;
-      letter-spacing:4px;
-      font-size:34px;
-      text-align:center;
-      margin:6px 0 18px;
-    }
-    .subtitle{ color:#9a9a9a; text-align:center; margin-bottom:26px; }
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            max-width: 1100px;
+            width: 100%;
+        }
 
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
-      border-radius:4px;
-      padding:18px;
-      box-shadow:0 0 0 1px rgba(255,255,255,0.02) inset;
-      max-width:820px;
-      margin:0 auto 20px;
-    }
-    .card h3{ margin:0 0 8px;color:#fff;font-size:16px; }
-    .card ul{ margin:8px 0 0;padding-left:18px;color:#bdbdbd; }
-    .tip{ color:#9a9a9a; margin-top:10px; font-size:13px; }
-    /* KillPlace form */
-    .form-row{ display:flex; flex-direction:column; gap:8px; max-width:520px; margin:10px auto; }
-    label{ font-size:13px;color:#bfbfbf; }
-    input[type="text"], input[type="url"]{
-      background: #0b0b0b;
-      border:1px solid rgba(255,255,255,0.03);
-      padding:10px 12px;
-      color:var(--text);
-      border-radius:4px;
-      outline:none;
-      font-family:var(--mono);
-    }
-    .muted-line{ color:#9a9a9a; font-size:13px; text-align:center; margin-top:8px; }
+        /* Панель настройки */
+        .settings {
+            width: 260px;
+            background: var(--panel);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #444;
+        }
 
-    .execute{
-      display:block;
-      margin:12px auto 0;
-      background:var(--accent);
-      color:#fff;
-      border:0;
-      padding:10px 22px;
-      border-radius:4px;
-      cursor:pointer;
-      font-weight:700;
-      letter-spacing:1px;
-    }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
+        input, select {
+            width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #444;
+            color: white; border-radius: 6px; box-sizing: border-box;
+        }
 
-    /* footer */
-    .footer{
-      text-align:center;
-      color:var(--green);
-      font-size:12px;
-      margin-top:36px;
-      font-family:var(--mono);
-    }
+        /* Центр: Коробка с кубами */
+        .box-area {
+            flex: 1;
+            background: #111;
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px dashed #444;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    /* responsive */
-    @media (max-width:700px){
-      .sidebar{display:none;}
-      .main{padding:18px;}
-    }
-  </style>
+        .dice-collection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+            min-height: 200px;
+            margin-bottom: 30px;
+        }
+
+        /* Вид отдельного кубика в коробке */
+        .die-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .die-item svg { position: absolute; width: 100%; height: 100%; fill: #34495e; stroke: var(--gold); stroke-width: 2; }
+        .die-item .num { position: relative; z-index: 5; font-weight: bold; font-size: 20px; color: var(--gold); }
+        
+        .remove-die {
+            position: absolute; top: -8px; right: -8px;
+            background: var(--red); color: white; border: none;
+            width: 20px; height: 20px; border-radius: 50%;
+            cursor: pointer; font-size: 12px; line-height: 1;
+        }
+
+        /* Кнопка БРОСОК */
+        .roll-all-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            background: var(--gold);
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+        }
+
+        .roll-all-btn:hover { transform: scale(1.02); background: #ffdb4d; }
+        .roll-all-btn:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
+
+        /* История */
+        .history {
+            width: 240px;
+            background: var(--panel);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-log {
+            flex: 1; overflow-y: auto; height: 350px;
+            list-style: none; padding: 0; margin: 10px 0;
+            font-family: monospace; border-bottom: 1px solid #333;
+        }
+
+        .log-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; font-size: 13px; }
+        .sum-box { text-align: center; font-size: 22px; font-weight: bold; color: var(--gold); margin-top: 10px; }
+
+        /* Анимация тряски */
+        @keyframes shake {
+            0% { transform: translate(2px, 2px); }
+            50% { transform: translate(-2px, -2px); }
+            100% { transform: translate(0, 0); }
+        }
+        .rolling { animation: shake 0.1s infinite; }
+        .hide { display: none; }
+    </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">NEONHIVE</div>
-      <div class="subbrand">CONTROL PANEL</div>
-      <nav class="nav" role="navigation">
-        <button class="nav-btn active" data-target="home">Home</button>
-        <button class="nav-btn" data-target="swordfight">SwordFight</button>
-        <button class="nav-btn" data-target="killplace">KillPlace</button>
-        <button class="nav-btn" data-target="autoreg">AutoReg</button>
-        <button class="nav-btn" data-target="about">About</button>
-      </nav>
-    </aside>
 
-    <main class="main">
-      <div class="title">WELCOME TO NEONHIVE</div>
-      <div class="subtitle">Your internal panel. Choose a module on the left.</div>
-
-      <!-- HOME -->
-      <section id="home" class="card content-panel">
-        <h3>Quick Info</h3>
-        <div style="background: #111; padding:14px; border-radius:4px;">
-          <ul>
-            <li><strong>AutoReg module</strong> – Auto Registration accounts for roblox</li>
-            <li><strong>SwordFight</strong> – Cheats for Swordfight Condo!</li>
-            <li><strong>About</strong> – Information</li>
-          </ul>
-          <div class="tip">Tip: Use EXECUTE to run autorun routine.</div>
+<div class="main-layout">
+    <!-- ЛЕВО: Добавление -->
+    <div class="settings">
+        <h3 style="color:var(--gold); margin-top:0;">Все кубы IT TOP</h3>
+        <div class="input-group">
+            <label>Граней (d2 - d100)</label>
+            <input type="number" id="sides-in" value="6">
         </div>
-      </section>
-
-      <!-- SWORD FIGHT -->
-      <section id="swordfight" class="card content-panel" style="display:none;">
-        <h3>SwordFight</h3>
-        <div style="background:#111;padding:14px;border-radius:4px;color:#cfcfcf;">
-          Здесь находятся модули и чит-функции для SwordFight Condo.
-          (Здесь оставлено как в оригинале — демонстрационная секция.)
+        <div class="input-group">
+            <label>Визуальная форма</label>
+            <select id="shape-in">
+                <option value="4">Треугольник (d4)</option>
+                <option value="6" selected>Квадрат (d6)</option>
+                <option value="8">Алмаз (d8)</option>
+                <option value="10">Ромб (d10)</option>
+                <option value="20">Гексагон (d20)</option>
+                <option value="100">Круг (d100)</option>
+            </select>
         </div>
-      </section>
+        <button onclick="addDie()" style="width:100%; background:#27ae60; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold;">ДОБАВИТЬ В КОРОБКУ</button>
+    </div>
 
-      <!-- KILLPLACE (новый пункт) -->
-      <section id="killplace" class="card content-panel" style="display:none;">
-        <h3>KillPlace</h3>
-        <div style="background:#111;padding:14px;border-radius:4px;color:#cfcfcf;">
-          Automatic reporting the place for delete a competitors
+    <!-- ЦЕНТР: Коробка -->
+    <div class="box-area">
+        <h2 style="margin-top:0;">Кубы</h2>
+        <div id="dice-collection" class="dice-collection">
+            <!-- Здесь будут кубики -->
+            <p id="empty-msg" style="color:#555; margin-top:50px;">Кубов нет. Добавьте кубики слева.</p>
         </div>
+        <button id="roll-btn" class="roll-all-btn" onclick="rollAll()" disabled>БРОСИТЬ ВСЕ</button>
+    </div>
 
-        <div class="form-row">
-          <label for="kp-text">Введите текст</label>
-          <input id="kp-text" type="text" placeholder="Some text..." />
+    <!-- ПРАВО: История -->
+    <div class="history">
+        <strong>ИСТОРИЯ БРОСКОВ</strong>
+        <ul id="history-log" class="history-log"></ul>
+        <div class="sum-box">СУММА: <span id="total-sum">0</span></div>
+        <button onclick="clearAll()" style="margin-top:15px; background:none; border:1px solid #555; color:#888; cursor:pointer; padding:5px;">Очистить всё</button>
+    </div>
+</div>
 
-          <label for="kp-link">Введите ссылку</label>
-          <input id="kp-link" type="url" placeholder="https://example.com" />
+<script>
+    const paths = {
+        4: 'M 50,5 L 95,90 L 5,90 Z',
+        6: 'M 15,1 5 H 85 V 85 H 15 Z',
+        8: 'M 50,5 L 90,50 L 50,95 L 10,50 Z M 10,50 L 90,50 M 50,5 L 50,95',
+        10: 'M 50,5 L 90,45 L 50,95 L 10,45 Z',
+        20: 'M 50,5 L 90,25 L 90,75 L 50,95 L 10,75 L 10,25 Z',
+        100: 'M 50,50 m -45,0 a 45,45 0 1,0 90,0 a 45,45 0 1,0 -90,0'
+    };
 
-          <div class="muted-line">Accounts for kill place: <strong>39</strong></div>
+    let diceBox = []; // Список кубиков в коробке
+    let totalScore = 0;
+    let isRolling = false;
 
-          <button id="kp-exec" class="execute">EXECUTE</button>
-        </div>
-      </section>
+    const collectionEl = document.getElementById('dice-collection');
+    const rollBtn = document.getElementById('roll-btn');
+    const historyLog = document.getElementById('history-log');
+    const sumEl = document.getElementById('total-sum');
+    const emptyMsg = document.getElementById('empty-msg');
 
-      <!-- AUTOREG -->
-      <section id="autoreg" class="card content-panel" style="display:none;">
-        <h3>AutoReg</h3>
-        <div style="background:#111;padding:14px;border-radius:4px;color:#cfcfcf;">
-          Модуль автогенерации аккаунтов (демо).
-        </div>
-      </section>
+    // Функция добавления в коробку
+    function addDie() {
+        const sides = parseInt(document.getElementById('sides-in').value);
+        const shape = document.getElementById('shape-in').value;
+        
+        if (sides < 2) return alert("Минимум 2 грани!");
 
-      <!-- ABOUT -->
-      <section id="about" class="card content-panel" style="display:none;">
-        <h3>About</h3>
-        <div style="background:#111;padding:14px;border-radius:4px;color:#cfcfcf;">
-          NEONHIVE • Built-in Suite<br/>
-          maked by @nbsbp (saidecuro)
-        </div>
-      </section>
+        diceBox.push({ sides, shape, lastResult: '?' });
+        updateUI();
+    }
 
-      <div class="footer">NEONHIVE • Built-in Suite</div>
-    </main>
-  </div>
+    // Удаление из коробки
+    function removeDie(index) {
+        if (isRolling) return;
+        diceBox.splice(index, 1);
+        updateUI();
+    }
 
-  <script>
-    // navigation
-    document.querySelectorAll('.nav-btn').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
+    // Обновление вида коробки
+    function updateUI() {
+        collectionEl.innerHTML = '';
+        if (diceBox.length === 0) {
+            collectionEl.appendChild(emptyMsg);
+            rollBtn.disabled = true;
+        } else {
+            rollBtn.disabled = false;
+            diceBox.forEach((die, index) => {
+                const div = document.createElement('div');
+                div.className = 'die-item';
+                div.id = `die-${index}`;
+                div.innerHTML = `
+                    <button class="remove-die" onclick="removeDie(${index})">×</button>
+                    <svg viewBox="0 0 100 100"><path d="${paths[die.shape]}" /></svg>
+                    <div class="num" id="val-${index}">${die.lastResult}</div>
+                `;
+                collectionEl.appendChild(div);
+            });
+        }
+    }
 
-        const target = btn.getAttribute('data-target');
-        document.querySelectorAll('.content-panel').forEach(panel=>{
-          panel.style.display = (panel.id === target) ? '' : 'none';
+    // БРОСОК ВСЕХ КУБОВ
+    function rollAll() {
+        if (isRolling || diceBox.length === 0) return;
+        isRolling = true;
+        rollBtn.disabled = true;
+
+        // Запускаем анимацию для всех
+        diceBox.forEach((_, i) => {
+            document.getElementById(`die-${i}`).classList.add('rolling');
         });
-        // scroll to top of main area
-        window.scrollTo({top:0,behavior:'smooth'});
-      });
-    });
 
-    // Execute button behaviour
-    document.getElementById('kp-exec').addEventListener('click', ()=>{
-      const txt = document.getElementById('kp-text').value;
-      const link = document.getElementById('kp-link').value;
-      // Здесь симулируем выполнение. В реальном приложении нужно заменить на реальные вызовы.
-      console.log('EXECUTE KillPlace:', { text: txt, link: link, accounts: 39 });
-      alert('EXECUTE pressed\nText: ' + (txt||'<empty>') + '\nLink: ' + (link||'<empty>') + '\nAccounts for kill place: 39');
-    });
+        let ticks = 0;
+        let rollTimer = setInterval(() => {
+            diceBox.forEach((die, i) => {
+                document.getElementById(`val-${i}`).innerText = Math.floor(Math.random() * die.sides) + 1;
+            });
+            ticks++;
 
-    // init: show home
-    document.querySelector('.nav-btn[data-target="home"]').click();
-  </script>
+            if (ticks > 15) {
+                clearInterval(rollTimer);
+                finalizeRoll();
+            }
+        }, 60);
+    }
+
+    function finalizeRoll() {
+        let currentRollSum = 0;
+        let rollDetails = [];
+
+        diceBox.forEach((die, i) => {
+            const res = Math.floor(Math.random() * die.sides) + 1;
+            die.lastResult = res;
+            document.getElementById(`val-${i}`).innerText = res;
+            document.getElementById(`die-${i}`).classList.remove('rolling');
+            
+            currentRollSum += res;
+            rollDetails.push(`d${die.sides}:${res}`);
+        });
+
+        // Добавляем в историю
+        totalScore += currentRollSum;
+        sumEl.innerText = totalScore;
+
+        const li = document.createElement('li');
+        li.className = 'log-item';
+        li.innerHTML = `<span title="${rollDetails.join(', ')}">Бросок (${diceBox.length} куб.)</span> <span>+${currentRollSum}</span>`;
+        historyLog.prepend(li);
+
+        isRolling = false;
+        rollBtn.disabled = false;
+    }
+
+    function clearAll() {
+        diceBox = [];
+        totalScore = 0;
+        sumEl.innerText = "0";
+        historyLog.innerHTML = "";
+        updateUI();
+    }
+
+    // Инициализация
+    updateUI();
+</script>
+
 </body>
 </html>
